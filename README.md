@@ -1,8 +1,72 @@
 # Personal Email AI Agent
 
+## Simple React Chatbot for n8n
+
+This repository also includes a minimal React and Vite chatbot in `src/App.jsx`.
+It sends each message to this n8n **test** Webhook URL:
+
+```text
+https://omraj68.app.n8n.cloud/webhook-test/n8n
+```
+
+### Install and start
+
+Install the JavaScript dependencies from the repository root:
+
+```bash
+npm install
+```
+
+Start the Vite development server:
+
+```bash
+npm run dev
+```
+
+Open the local address printed by Vite (usually `http://localhost:5173`) in a
+browser. Type a message and either click **Send** or press **Enter**. The chat
+adds your message immediately, displays `Bot is typing...` while waiting, and
+then adds n8n's reply.
+
+### n8n communication
+
+The React app sends a `POST` request with this JSON body:
+
+```json
+{
+  "message": "Hello"
+}
+```
+
+Configure the n8n workflow approximately as `Webhook → AI Agent / processing
+→ Respond to Webhook`. Its Respond to Webhook node should return JSON in this
+shape:
+
+```json
+{
+  "output": "Hello! How can I help you?"
+}
+```
+
+Because this is a test Webhook, make sure the n8n workflow is listening in
+test mode before sending a message. For production, n8n provides a separate
+production Webhook URL after the workflow is activated.
+
+### CORS troubleshooting
+
+If the browser console reports a CORS error, configure the n8n Webhook or
+reverse proxy to return an `Access-Control-Allow-Origin` header for the Vite
+application's origin, such as `http://localhost:5173`. Also allow `POST` and
+the `Content-Type` request header. If the Webhook node exposes response-header
+options, add these headers to its response; otherwise configure them in the
+n8n instance or the proxy in front of it. Restart or reactivate the workflow,
+then test the chat again.
+
 A local Python 3.11+ application that connects to Gmail with the Gmail API and OAuth 2.0, scans recent email, detects job/interview/internship/GD/placement/assessment messages with configurable keywords, optionally analyzes relevant email with an AI provider, stores processed messages in SQLite, prevents duplicates, and creates timestamped PDF reports.
 
-No n8n, Zapier, Make, Selenium, IMAP, browser scraping, or Gmail passwords are used.
+The Python email-processing functionality uses no n8n, Zapier, Make, Selenium,
+IMAP, browser scraping, or Gmail passwords. The separate React chatbot above
+uses n8n only through the configured Webhook URL.
 
 ## Features
 
