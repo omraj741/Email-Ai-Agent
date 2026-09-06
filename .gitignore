@@ -9,3 +9,5 @@ __pycache__/
 data/*.db
 reports/
 logs/
+node_modules/
+dist/
